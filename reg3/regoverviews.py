@@ -73,7 +73,7 @@ def handle_overviews(dept, coursenum, area, title):
                     ORDER BY crosslistings.dept, crosslistings.coursenum, classes.classid
                     '''
                 cursor.execute(statement_str,
-                (f"%{dept}%", f"%{coursenum}%", \
+                (f"%{classid}%", f"%{dept}%", f"%{coursenum}%", \
                     f"%{area}%", f"%{title}%"))
                 table = cursor.fetchall()
 

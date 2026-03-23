@@ -7,7 +7,7 @@
     Class Search
     </h2>
     <hr>
-    <form action="/" method="get">
+    <form method="get">
         Dept:
         <input type="text" name="dept" autofocus> <br>
         Number:
@@ -27,17 +27,15 @@
             <th>Area</th>
             <th>Title</th>
         </tr>
-        {%if table|length ==0: %}
-            (None)
-        {%else%}
-            {%for class in table%}
-                <tr>
-                    <th>table.classid</th>
-                    <th>table.dept</th>
-                    <th>table.coursenum</th>
-                    <th>table.area</th>
-                    <th>table.title</th>
-                </tr>
-        
+        {%for class in table%}
+            <tr>
+                <th>class[0]</th>
+                <th>class[1]</th>
+                <th>class[2]</th>
+                <th>class[3]/th>
+                <th>class[4]</th>
+            </tr>
+            {%endfor%}
+    
     </table>
 <html>

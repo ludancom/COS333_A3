@@ -26,34 +26,7 @@ app = flask.Flask(__name__, template_folder='.')
 
 #-----------------------------------------------------------------------
 
-@app.route('/', methods=['GET'])
-@app.route('/searchfrom', methods =['GET'])
-def searchfrom():
-    html_code = flask.render_template('searchfrom.html')
-    response = flask.make_response(html_code)
-    return response
 
-
-#-----------------------------------------------------------------------
-
-@app.route('/searchresults', methods=['GET'])
-def searchresults():
-    coursenum = ''
-    dept = ''
-    area = ''
-    title = ''
-
-    coursenum = flask.request.args.get('coursenum')
-    dept = flask.request.args.get('dept')
-    area = flask.request.args.get('area')
-    title = flask.request.args.get('title')
-
-    table = handle_overviews(dept, coursenum, area, title)    
-    html_code = flask.render_template('searchresults.html', table=table)
-    response = flask.make_response(html_code)
-
-        
-    return response
 
 def handle_overviews(dept, coursenum, area, title):
     try:
@@ -73,41 +46,59 @@ def handle_overviews(dept, coursenum, area, title):
                     ORDER BY crosslistings.dept, crosslistings.coursenum, classes.classid
                     '''
                 cursor.execute(statement_str,
-                (f"%{classid}%", f"%{dept}%", f"%{coursenum}%", \
-                    f"%{area}%", f"%{title}%"))
+                (f"%{dept}%", f"%{coursenum}%", f"%{area}%", f"%{title}%"))
                 table = cursor.fetchall()
+        return table
 
-
-                #protocol = []
-                #for row in table:
-                 #   protocol.append(
-                  #      {'classid':row[0], 'dept':row[1],
-                   #     'coursenum':row[2], 'area':row[3], \
-                    #        'title':row[4]})
-
+        
     except sqlite3.OperationalError as ex:
         protocol = [False, \
             "A server error occurred. " + \
                 "Please contact the system administrator."]
         print(f'{sys.argv[0]}: {ex}', file=sys.stderr)
         #send to browser
-        except Exception as thing:
-            print(f'{sys.argv[0]}: {thing}', file=sys.stderr)
 
     except Exception as ex:
         print(f'{sys.argv[0]}: {ex}', file=sys.stderr)
 
-    return table
+    
+#-----------------------------------------------------------------------
 
+@app.route('/', methods=['GET'])
+@app.route('/searchfrom', methods =['GET'])
+def searchfrom():
+    html_code = flask.render_template('searchfrom.html')
+    response = flask.make_response(html_code)
+    return response
 
+#-----------------------------------------------------------------------
+
+@app.route('/searchresults', methods=['GET'])
+def searchresults():
+    coursenum = ''
+    dept = ''
+    area = ''
+    title = ''
+
+    coursenum = flask.request.args.get('coursenum')
+    dept = flask.request.args.get('dept')
+    area = flask.request.args.get('area')
+    title = flask.request.args.get('title')
+    
+
+    table = handle_overviews(dept, coursenum, area, title)    
+    
+    html_code = flask.render_template('searchresults.html', table=table)
+    response = flask.make_response(html_code)
+
+        
+    return response
+
+#-----------------------------------------------------------------------
 
 def main():
     try:
 
-        
-
-
-        
 
         with socket.socket() as sock:
             sock.connect((args.host, int(args.port)))

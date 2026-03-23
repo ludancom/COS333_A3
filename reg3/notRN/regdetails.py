@@ -11,6 +11,7 @@ import textwrap
 import socket
 import json
 
+
 DATABASE_URL = 'file:reg.sqlite'
 
 def main():

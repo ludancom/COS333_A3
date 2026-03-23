@@ -7,6 +7,7 @@
 
 import sys
 import argparse
+import regoverviews
 
 def main():
     try:
@@ -15,11 +16,9 @@ def main():
         parser.add_argument('port', type=int, help='the port at \
             which the server should listen')
         args = parser.parse_args()
-
         port = args.port
-        
-        httpd = wsgiref.simple_server.make_server(’0.0.0.0’, port, penny.app)
-        print(’Listening on port ’ + str(port))
+        regoverviews.app.run('0.0.0.0', port, debug=True)
+        print('Listening on port ' + str(port))
         httpd.serve_forever()
 
 

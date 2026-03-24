@@ -27,7 +27,6 @@ app = flask.Flask(__name__, template_folder='.')
 #-----------------------------------------------------------------------
 
 
-
 def handle_overviews(dept, coursenum, area, title):
     try:
         with contextlib.closing(sqlite3.connect(DATABASE_URL + \
@@ -50,7 +49,6 @@ def handle_overviews(dept, coursenum, area, title):
                 table = cursor.fetchall()
         return table
 
-        
     except sqlite3.OperationalError as ex:
         protocol = [False, \
             "A server error occurred. " + \
@@ -64,10 +62,96 @@ def handle_overviews(dept, coursenum, area, title):
     
 #-----------------------------------------------------------------------
 
+def handle_details(classid):
+    try:
+        with contextlib.closing(sqlite3.connect(DATABASE_URL + \
+            '?mode=ro', isolation_level=None, uri=True)) as connection:
+            with contextlib.closing(connection.cursor()) as cursor:
+                statement_str = '''SELECT classid, days, starttime,
+                    endtime, bldg, roomnum, courseid
+                    FROM classes
+                    WHERE classid = ?
+                    ORDER BY classid ASC
+                    '''
+                cursor.execute(statement_str, [classid])
+                classdeets = cursor.fetchall()
+                if len(classdeets) == 0:
+                    protocol = [False, \
+                        f"no class with classid {classid} exists"]
+                    json_str = json.dumps(protocol)
+                    with sock.makefile(mode='w', \
+                        encoding='utf-8') as flo:
+                        flo.write(json_str + '\n')
+                        flo.flush()
+                    raise KeyError()
+                statement_str = '''SELECT courseid, area, title, \
+                    descrip, prereqs
+                   FROM courses
+                   WHERE courseid = ?
+                   '''
+                cursor.execute(statement_str, [classdeets[0][6]])
+                coursedeets = cursor.fetchall()
+
+                statement_str = '''SELECT dept, coursenum
+                   FROM crosslistings
+                   WHERE courseid = ?
+                   ORDER BY coursenum, dept ASC
+                   '''
+                cursor.execute(statement_str, [classdeets[0][6]])
+                dept_and_num = cursor.fetchall()
+
+                statement_str = '''SELECT coursesprofs.courseid,\
+                     coursesprofs.profid, profs.profid, profs.profname
+                   FROM coursesprofs, profs
+                   WHERE courseid = ?
+                   AND coursesprofs.profid = profs.profid
+                   ORDER BY profs.profname ASC
+                   '''
+                cursor.execute(statement_str, [classdeets[0][6]])
+                profname = cursor.fetchall()
+
+                profs=[]
+                deptnum=[]
+                for row in profname:
+                    profs.append(row[3])
+                for row in dept_and_num:
+                    deptnum.append({'dept':row[0], 'coursenum':row[1]})
+
+                return  {
+                    'classid':classdeets[0][0],
+                    'days':classdeets[0][1],
+                    'starttime':classdeets[0][2],
+                    'endtime':classdeets[0][3],
+                    'bldg':classdeets[0][4],
+                    'roomnum':classdeets[0][5],
+                    'courseid':classdeets[0][6],
+                    'deptcoursenums':deptnum,
+                    'area':coursedeets[0][1],
+                    'title':coursedeets[0][2],
+                    'descrip':coursedeets[0][3],
+                    'prereqs':coursedeets[0][4],
+                    'profnames':profs
+                }
+
+              
+    except sqlite3.OperationalError as ex:
+        print("A server error occurred. " + \
+                "Please contact the system administrator.")
+        print(f'{sys.argv[0]}: {ex}', file=sys.stderr)
+    except KeyError:
+        pass
+    except Exception as ex:
+        print(f'{sys.argv[0]}: {ex}', file=sys.stderr)
+
+
+
+#-----------------------------------------------------------------------
+
 @app.route('/', methods=['GET'])
-@app.route('/searchfrom', methods =['GET'])
-def searchfrom():
-    html_code = flask.render_template('searchfrom.html')
+@app.route('/start', methods =['GET'])
+def start():
+    table = handle_overviews('', '', '', '')    
+    html_code = flask.render_template('start.html', table=table)
     response = flask.make_response(html_code)
     return response
 
@@ -84,59 +168,22 @@ def searchresults():
     dept = flask.request.args.get('dept')
     area = flask.request.args.get('area')
     title = flask.request.args.get('title')
-    
 
     table = handle_overviews(dept, coursenum, area, title)    
     
     html_code = flask.render_template('searchresults.html', table=table)
     response = flask.make_response(html_code)
 
-        
     return response
 
 #-----------------------------------------------------------------------
 
-def main():
-    try:
+@app.route('/details', methods =['GET'])
+def details():
+    table = handle_details(flask.request.args.get('classid'))
+    html_code = flask.render_template('details.html', classid = table['classid'],days=table['days'], starttime=table['starttime'], endtime=table['endtime'], bldg=table['bldg'], room=table['roomnum'], courseid=table['courseid'],deptnums=table['deptcoursenums'],area=table['area'],title=table['title'],descrip=table['descrip'],prereqs=table['prereqs'],profs=table['profnames'])
+    response = flask.make_response(html_code)
+    return response
 
+#-----------------------------------------------------------------------
 
-        with socket.socket() as sock:
-            sock.connect((args.host, int(args.port)))
-            #writing to outside
-            json_str = json.dumps(protocol)
-            with sock.makefile(mode='w', encoding='utf-8') as flo:
-                flo.write(json_str + '\n')
-                flo.flush()
-
-            #readings from outside
-            with sock.makefile(mode='r', encoding='utf-8') as flo:
-                json_read = flo.readline()
-
-            json_read = json_read.rstrip()
-            json_read = json.loads(json_read)
-
-            if json_read[0] is False:
-                raise Exception(json_read[1])
-
-
-            wrapper = textwrap.TextWrapper(width=72, \
-            subsequent_indent = '                       ')
-
-            print("ClsId Dept CrsNum Area Title")
-            print("----- ---- ------ ---- -----")
-
-            for row in json_read[1]:
-                row = '%5s %4s %6s %4s %s' % (row.get('classid'),
-                 row.get('dept'), row.get('coursenum'), \
-                    row.get('area'), row.get('title'))
-                row = wrapper.wrap(text=row)
-                for element in row:
-                    print(element)
-
-
-    except Exception as ex:
-        print(f'{sys.argv[0]}: {ex}', file=sys.stderr)
-        sys.exit(2)
-
-if __name__ == '__main__':
-    main()

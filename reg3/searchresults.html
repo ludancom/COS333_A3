@@ -8,16 +8,31 @@
     </h2>
     <hr>
     <form method="get">
-        Dept:
-        <input type="text" name="dept" autofocus> <br>
-        Number:
-        <input type="text" name="coursenum" autofocus><br>
-        Area:
-        <input type="text" name="area" autofocus><br>
-        Title:
-        <input type="text" name="title" autofocus><br>
-        <input type="submit" value="Go">
+        <table>
+            <tr>
+                <td align="right">Dept:</td>
+                <td><input type="text" name="dept" autofocus> <td>
+            </tr>
+            <tr>
+                <td align="right">Number:</td>
+                <td><input type="text" name="coursenum" autofocus></td>
+    
+            </tr>
+            <tr>
+                <td align="right">Area:</td>
+                <td><input type="text" name="area" autofocus><br></td>  
+            </tr>
+            <tr>
+                <td align="right">Title:</td>
+                <td><input type="text" name="title" autofocus></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td><input type="submit" value="Go"></td>
+            </tr>   
+        </table>
     </form>
+    
     <hr>
     <table border="1">
         <tr>
@@ -25,17 +40,16 @@
             <th>Dept</th>
             <th>Num</th>
             <th>Area</th>
-            <th>Title</th>
+            <td><strong>Title</strong></td>
         </tr>
         {%for class in table%}
             <tr>
-                <th>class[0]</th>
-                <th>class[1]</th>
-                <th>class[2]</th>
-                <th>class[3]/th>
-                <th>class[4]</th>
+                <td><a href="/details?classid={{ class[0] }}">{{class[0]}}</a></td>
+                <td>{{class[1]}}</td>
+                <td>{{class[2]}}</td>
+                <td>{{class[3]}}</td>
+                <td>{{class[4]}}</td>
             </tr>
-            {%endfor%}
-    
+        {%endfor%}
     </table>
 <html>

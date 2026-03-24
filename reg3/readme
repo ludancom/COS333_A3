@@ -25,23 +25,27 @@ assignment solution: sources of information." Write "None" to indicate
 that you used no written sources of information other than the lecture
 material.
 https://www.digitalocean.com/community/tutorials/how-to-create-tables-in-html - creating tables
-[Enter your reply here.]
+https://stackoverflow.com/questions/1967627/html-element-aside-from-headers-h1h2-ect = - formatting tables
+https://stackoverflow.com/questions/33384318/how-to-use-nbsp-in-html5 -using &nbsp
+https://stackoverflow.com/questions/29464349align-input-fields-in-html-without-css - formatting form table
+https://www.geeksforgeeks.org/html/html-table-align-attribute/ - alignment
 
 A description of the help that you received from generative AI while
 doing the assignment. Your description must consist of lines of the
 form "aspect of your assignment solution: generative AI engines used."
 Write "None" to indicate that you received no help from generative AI.
 
-[Enter your reply here.]
+None
 
 An indication of how much time you spent doing the assignment.
 
-[Enter your reply here.]
+10
 
 Your assessment of the assignment: Did it help you to learn? What did
 it help you to learn? Do you have any suggestions for improvement? Etc.
 
-[Enter your reply here.]
+It was helpful in understanding how to communicate from the web to my 
+program, and to try out relaying information from frontend to backend.
 
 (Optionally) Any information that will help us to grade your work in
 the most favorable light. In particular you must describe all known

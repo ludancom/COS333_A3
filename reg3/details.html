@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <h1>
+    Registrar's Office
+    </h1> <hr>
+    <h2>
+    Class Details
+    </h2>
+    <table border="1">
+        <tr><td><strong>Class Id</strong></td></td><td>{{classid}}</td></tr>
+        <tr><td><strong>Days</strong></td><td>{{days}}</td></tr>
+        <tr><td><strong>Start time</strong></td><td>{{starttime}}</td></tr>
+        <tr><td><strong>End time</strong></td><td>{{endtime}}</td></tr>
+        <tr><td><strong>Building</strong></td><td>{{bldg}}</td></tr>
+        <tr><td><strong>Room</strong></td><td>{{room}}</td></tr>
+    </table>
+
+    <h2>
+    Course Details
+    </h2>
+    <table border="1">
+        <tr><td><strong>Course Id</strong></td><td>{{courseid}}</td></tr>
+        {%for course in deptnums%}
+        <tr><td><strong>Dept and<br>Number</strong></td><td>{{course['dept']}}{{' '}}{{course['coursenum']}}</td></tr>
+        {%endfor%}
+        <tr><td><strong>Area</strong></td><td>{{area}}</td></tr>
+        <tr><td><strong>Title</strong></td><td>{{title}}</td></tr>
+        <tr><td><strong>Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong></td><td>{{descrip}}</td></tr>
+        <tr><td><strong>Prerequisites</strong></td><td>{{prereqs}}</td></tr>
+        {%for prof in profs%}
+        <tr><td><strong>Professor</strong></td><td>{{prof}}</td></tr>       
+        {%endfor%}
+    </table>
+    <hr>
+    Click here to <a href="/{prev}">do another class search</a>
+    <hr>
+    Created by Ludan Alsoudani And Saleema Diallo.
+    <hr>
+    <br>
+<html>

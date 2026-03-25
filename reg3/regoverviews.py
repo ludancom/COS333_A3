@@ -26,6 +26,13 @@ app = flask.Flask(__name__, template_folder='.')
 
 #-----------------------------------------------------------------------
 
+def escape(s):
+    s = s.replace('\\', '\\\\')  # escape backslash first
+    s = s.replace('%', '\\%')
+    s = s.replace('_', '\\_')
+    return s
+
+#-----------------------------------------------------------------------
 
 def handle_overviews(dept, coursenum, area, title):
     try:
@@ -38,14 +45,14 @@ def handle_overviews(dept, coursenum, area, title):
                     FROM classes, courses, crosslistings
                     WHERE classes.courseid=courses.courseid 
                     AND crosslistings.courseid = courses.courseid  
-                    AND dept LIKE ? 
-                    AND coursenum LIKE ? 
-                    AND area LIKE ? 
-                    AND title LIKE ? 
+                    AND dept LIKE ? ESCAPE \\
+                    AND coursenum LIKE ? ESCAPE \\
+                    AND area LIKE ? ESCAPE \\
+                    AND title LIKE ? ESCAPE \\
                     ORDER BY crosslistings.dept, crosslistings.coursenum, classes.classid
                     '''
                 cursor.execute(statement_str,
-                (f"%{dept}%", f"%{coursenum}%", f"%{area}%", f"%{title}%"))
+                (f"%{escape(dept)}%", f"%{escape(coursenum)}%", f"%{escape(area)}%", f"%{escape(title)}%"))
                 table = cursor.fetchall()
         return table
 

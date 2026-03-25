@@ -90,8 +90,19 @@ def main():
         run_test(server_url, browser_process,
             {'dept':'COS', 'coursenum':'2', 'area':'qr',
             'title':'intro'})
-
+        
         # Add more tests here.
+        run_test(server_url, browser_process,
+            {'dept':'COS', 'coursenum':'2', 'area':'qr',
+            'title':'  Independent Study'})
+
+        run_test(server_url, browser_process,
+            {'dept':'COS', 'coursenum':'2', 'area':'qr',
+            'title':'Independent Study '})
+        
+
+
+        
 
 if __name__ == '__main__':
     main()

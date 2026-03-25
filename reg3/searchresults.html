@@ -7,34 +7,34 @@
     Class Search
     </h2>
     <hr>
-    <form action ='\' method="get">
+    <form action ="/" method="get">
         <table> 
             <tr>
                 <td align="right">Dept:</td>
-                <td><input type="text" name="dept" value = {{dept}} > <td>
+                <td><input type="text" name="dept" value = "{{dept}}" id="deptInput" > <td>
             </tr>
             <tr>
                 <td align="right">Number:</td>
-                <td><input type="text" name="coursenum" value = {{coursenum}} ></td>
+                <td><input type="text" name="coursenum" value = "{{coursenum}}" id="coursenumInput" ></td>
     
             </tr>
             <tr>
                 <td align="right">Area:</td>
-                <td><input type="text" name="area" value = {{area}} ><br></td>  
+                <td><input type="text" name="area" value = "{{area}}" id="areaInput"><br></td>  
             </tr>
             <tr>
                 <td align="right">Title:</td>
-                <td><input type="text" name="title" value = {{title}} ></td>
+                <td><input type="text" name="title" value = "{{title}}" id="titleInput"></td>
             </tr>
             <tr>
                 <td></td>
-                <td><input type="submit" value="Go"></td>
+                <td><input type="submit" value="Go" id="submitButton"></td>
             </tr>   
         </table>
     </form>
     
     <hr>
-    <table border="1">
+    <table border="1" id="overviewsTable">
         <tr>
             <th>ClassId</th>
             <th>Dept</th>
@@ -44,7 +44,7 @@
         </tr>
         {%for class in table%}
             <tr>
-                <td><a href="/details?classid={{ class[0] }}">{{class[0]}}</a></td>
+                <td><a href="/regdetails?classid={{ class[0] }}">{{class[0]}}</a></td>
                 <td>{{class[1]}}</td>
                 <td>{{class[2]}}</td>
                 <td>{{class[3]}}</td>
@@ -52,4 +52,8 @@
             </tr>
         {%endfor%}
     </table>
+    <hr>
+    Created by Ludan Alsoudani and Saleema Diallo.
+    <hr>
+    <br>
 <html>

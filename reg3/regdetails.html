@@ -2,11 +2,12 @@
 <html>
     <h1>
     Registrar's Office
-    </h1> <hr>
+    </h1> 
+    <hr>
     <h2>
     Class Details
     </h2>
-    <table border="1">
+    <table border="1" id="classDetailsTable">
         <tr><td><strong>Class Id</strong></td></td><td>{{classid}}</td></tr>
         <tr><td><strong>Days</strong></td><td>{{days}}</td></tr>
         <tr><td><strong>Start time</strong></td><td>{{starttime}}</td></tr>
@@ -17,23 +18,23 @@
     <h2>
     Course Details
     </h2>
-    <table border="1">
+    <table border="1" id="courseDetailsTable">
         <tr><td><strong>Course Id</strong></td><td>{{courseid}}</td></tr>
         {%for course in deptnums%}
-        <tr><td><strong>Dept and<br>Number</strong></td><td>{{course['dept']}}{{' '}}{{course['coursenum']}}</td></tr>
+        <tr><td><strong>Dept and Number</strong></td><td>{{course['dept']}}{{' '}}{{course['coursenum']}}</td></tr>
         {%endfor%}
         <tr><td><strong>Area</strong></td><td>{{area}}</td></tr>
         <tr><td><strong>Title</strong></td><td>{{title}}</td></tr>
-        <tr><td><strong>Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong></td><td>{{descrip}}</td></tr>
+        <tr><td><strong>Description</strong></td><td>{{descrip}}</td></tr>
         <tr><td><strong>Prerequisites</strong></td><td>{{prereqs}}</td></tr>
         {%for prof in profs%}
         <tr><td><strong>Professor</strong></td><td>{{prof}}</td></tr>       
         {%endfor%}
     </table>
     <hr>
-    Click here to <a href="/searchresults?dept={{dept}}&coursenum={{coursenum}}&area={{areas}}&title={{titles}}">do another class search</a>
+    Click here to <a href="/?dept={{dept}}&coursenum={{coursenum}}&area={{areas}}&title={{titles}}">do another class search</a>
     <hr>
-    Created by Ludan Alsoudani And Saleema Diallo.
+    Created by Ludan Alsoudani and Saleema Diallo.
     <hr>
     <br>
 <html>

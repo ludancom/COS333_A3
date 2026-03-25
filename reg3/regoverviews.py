@@ -144,45 +144,61 @@ def handle_details(classid):
         print(f'{sys.argv[0]}: {ex}', file=sys.stderr)
 
 
-
 #-----------------------------------------------------------------------
-
 @app.route('/', methods=['GET'])
-@app.route('/start', methods =['GET'])
-def start():
-    table = handle_overviews('', '', '', '')    
-    html_code = flask.render_template('start.html', table=table)
-    response = flask.make_response(html_code)
-    return response
-
-#-----------------------------------------------------------------------
-
 @app.route('/searchresults', methods=['GET'])
 def searchresults():
-    coursenum = ''
-    dept = ''
-    area = ''
-    title = ''
+    coursenum = flask.request.args.get('coursenum', '')
+    dept = flask.request.args.get('dept', '')
+    area = flask.request.args.get('area', '')
+    title = flask.request.args.get('title', '')
 
-    coursenum = flask.request.args.get('coursenum')
-    dept = flask.request.args.get('dept')
-    area = flask.request.args.get('area')
-    title = flask.request.args.get('title')
-
-    table = handle_overviews(dept, coursenum, area, title)    
     
-    html_code = flask.render_template('searchresults.html', table=table)
+    table = handle_overviews(dept, coursenum, area, title) 
+
+    
+    html_code = flask.render_template('searchresults.html', table=table, dept = dept, coursenum = coursenum, area = area, title=title)
     response = flask.make_response(html_code)
 
+    response.set_cookie('prevdept', dept)
+    response.set_cookie('coursenum', coursenum)
+    response.set_cookie('prevarea', area)
+    response.set_cookie('prevtitle', title)
+    
     return response
 
 #-----------------------------------------------------------------------
 
 @app.route('/details', methods =['GET'])
 def details():
+    dept = flask.request.cookies.get("prevdept", '')
+    coursenum = flask.request.cookies.get("coursenum", '')
+    areas = flask.request.cookies.get("prevarea", '')
+    titles = flask.request.cookies.get("prevtitle", '')
+
     table = handle_details(flask.request.args.get('classid'))
-    html_code = flask.render_template('details.html', classid = table['classid'],days=table['days'], starttime=table['starttime'], endtime=table['endtime'], bldg=table['bldg'], room=table['roomnum'], courseid=table['courseid'],deptnums=table['deptcoursenums'],area=table['area'],title=table['title'],descrip=table['descrip'],prereqs=table['prereqs'],profs=table['profnames'])
+    html_code = flask.render_template('details.html', 
+    classid = table['classid'],
+    days=table['days'], 
+    starttime=table['starttime'], 
+    endtime=table['endtime'], 
+    bldg=table['bldg'], 
+    room=table['roomnum'], 
+    courseid=table['courseid'],
+    deptnums=table['deptcoursenums'],
+    area=table['area'],
+    title=table['title'],
+    descrip=table['descrip'],
+    prereqs=table['prereqs'],
+    profs=table['profnames'],
+    dept = dept,
+    coursenum = coursenum,
+    areas = areas,
+    titles = titles
+    )
+
     response = flask.make_response(html_code)
+    
     return response
 
 #-----------------------------------------------------------------------
